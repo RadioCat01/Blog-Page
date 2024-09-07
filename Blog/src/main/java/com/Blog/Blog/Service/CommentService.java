@@ -24,9 +24,12 @@ public class CommentService {
 
         return commentRepository.save(com);
     }
+
+
     public List<Comment> getAllComments(){
         return  commentRepository.findAll();
     }
+
 
     public void deleteComment(Integer comId){
         Optional<Comment> commentTODelete =commentRepository.findById(comId);
@@ -36,7 +39,7 @@ public class CommentService {
 
         }else {
             throw new EntityNotFoundException
-                    ("No such entity"+ commentTODelete);
+                    ("No such entity");
         }
     }
 }

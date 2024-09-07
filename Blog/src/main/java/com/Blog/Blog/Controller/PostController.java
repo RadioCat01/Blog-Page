@@ -19,40 +19,43 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody Post post){
-        try{
-            Post createdPost = postService.savePost(post);
+        Post createdPost = postService.savePost(post);
+
+        if(createdPost != null){
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
-        }catch (Exception e){
+        }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+
     }
 
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts(){
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
-        }catch (Exception e){
+        List<Post> posts = postService.getAllPosts();
+        if(posts != null){
+            return ResponseEntity.status(HttpStatus.OK).body(posts);
+        }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPostedById(@PathVariable Long postId){
-        try{
-            Post post=postService.getPostById(postId);
-            return ResponseEntity.ok(post);
-        }catch (EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        Post post = postService.getPostById(postId);
+        if(post != null){
+            return ResponseEntity.status(HttpStatus.OK).body(post);
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PutMapping("/{postId}/like")
     public ResponseEntity<?> likePost (@PathVariable Long postId){
-        try{
-            postService.likePost(postId);
-            return ResponseEntity.ok(new String[]{"Liked"});
-        }catch (EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        Long likePostId = postService.likePost(postId);
+        if(likePostId != null){
+            return ResponseEntity.status(HttpStatus.OK).body(likePostId);
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

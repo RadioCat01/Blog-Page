@@ -6,8 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Data
 @AllArgsConstructor
@@ -18,15 +20,4 @@ public class Comment {
     private Integer id;
     private String message;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

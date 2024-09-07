@@ -19,10 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private CommentService commentService;
+    private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody String comment){
+    public ResponseEntity<?> createComment(@RequestBody String comment){
         try{
             Comment createdComment = commentService.saveComment(comment);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
@@ -32,7 +32,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getAllPosts(){
+    public ResponseEntity<List<Comment>> getAllComments(){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllComments());
         }catch (Exception e){
