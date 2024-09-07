@@ -23,32 +23,32 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody String comment){
-        try{
-            Comment createdComment = commentService.saveComment(comment);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        Comment createdComment = commentService.saveComment(comment);
+        if(createdComment != null){
+            return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
     public ResponseEntity<List<Comment>> getAllComments(){
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllComments());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        List<Comment> comments = commentService.getAllComments();
+        if(comments != null){
+            return new ResponseEntity<>(comments, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(
             @PathVariable Integer commentId ){
-        try{
-            commentService.deleteComment(commentId);
-            return ResponseEntity.noContent().build();
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.
-                    INTERNAL_SERVER_ERROR).build();
+        Integer id = commentService.deleteComment(commentId);
+        if(id != null){
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

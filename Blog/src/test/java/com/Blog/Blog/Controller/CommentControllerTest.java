@@ -1,5 +1,6 @@
 package com.Blog.Blog.Controller;
 
+import com.Blog.Blog.Entity.Comment;
 import com.Blog.Blog.Service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,8 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = CommentController.class)
@@ -25,6 +29,7 @@ class CommentControllerTest {
 
     @Test
     void shouldCreateComment() throws Exception {
+        when(commentService.saveComment(anyString())).thenReturn(new Comment());
         mockMvc.perform(MockMvcRequestBuilders.post("/comment")
                 .content("new Comment"))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -36,7 +41,18 @@ class CommentControllerTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenCreatingComment2() throws Exception {
+        when(commentService.saveComment(anyString())).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/comment")
+                        .content("new Comment"))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+    }
+
+    @Test
     void shouldGetAllComments() throws Exception {
+        when(commentService.getAllComments()).thenReturn(List.of(new Comment()));
+
         mockMvc.perform(MockMvcRequestBuilders.get("/comment"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
@@ -48,8 +64,25 @@ class CommentControllerTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenGettingComments2() throws Exception {
+        when(commentService.getAllComments()).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders.post("/comment")
+                        .content("Keyword"))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
+    }
+
+    @Test
     void shouldDeleteComment() throws Exception {
+        when(commentService.deleteComment(anyInt())).thenReturn(1);
         mockMvc.perform(MockMvcRequestBuilders.delete("/comment/3"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeleteComment() throws Exception {
+        when(commentService.deleteComment(anyInt())).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/comment/3"))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError());
     }
 }

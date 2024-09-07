@@ -31,11 +31,12 @@ public class CommentService {
     }
 
 
-    public void deleteComment(Integer comId){
+    public Integer deleteComment(Integer comId){
         Optional<Comment> commentTODelete =commentRepository.findById(comId);
         if(commentTODelete.isPresent()){
             Comment comment = commentTODelete.get();
             commentRepository.delete(comment);
+            return comId;
 
         }else {
             throw new EntityNotFoundException
